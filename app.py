@@ -1,20 +1,27 @@
 from flask import Flask, request, jsonify
+import os
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "AI Chatbot is running!"
+    return "✅ Chatbot server is running successfully!"
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    user_message = request.json.get("message", "")
-    # simple AI response
+    data = request.get_json()
+    user_message = data.get("message", "")
+
+    # Simple AI response
     if "hello" in user_message.lower():
-        reply = "Hi! How can I help you today?"
+        reply = "Hi there! How can I help you?"
+    elif "bye" in user_message.lower():
+        reply = "Goodbye! Have a nice day!"
     else:
-        reply = "I'm a lightweight chatbot!"
+        reply = "I'm a simple chatbot response 😊"
+
     return jsonify({"reply": reply})
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8080)
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port)
